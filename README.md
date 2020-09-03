@@ -87,7 +87,7 @@ MariaDB [java]> select * from moviereview;
 +-------+------+------------------------------------------------------------------------+
 | stars | res  | comment                                                                |
 +-------+------+------------------------------------------------------------------------+
-| 0     | no   | Commen = Bekar movie hai bilkul , isse achcha to tom and jerry dekh lu |
+| 0     | no   |  Bekar movie hai bilkul , isse achcha to tom and jerry dekh lu         |
 +-------+------+------------------------------------------------------------------------+
 1 row in set (0.000 sec)
 ```
