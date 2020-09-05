@@ -152,3 +152,13 @@ public class showusers extends HttpServlet {
 > Redirected to showusers 
 
 ![](/images/image-6.png)
+
+
+> design of homepage
+
+![](/images/image-7.png)
+
+> design of showusers4
+
+![](/images/image-8.png)
+
