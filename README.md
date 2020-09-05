@@ -2,6 +2,12 @@
 
 **Submitted by - Prashant Saini**
 
+
+Download both Projects from here
+
+project 1 - [https://drive.google.com/drive/folders/1vNFz3OiRT82SI_shkffJN72KltRQzyNs?usp=sharing](https://drive.google.com/drive/folders/1vNFz3OiRT82SI_shkffJN72KltRQzyNs?usp=sharing)
+
+Project 2 - [https://drive.google.com/drive/folders/1tD3G47n7r7tRqSeGR0fdKSYLkn-EPQiH?usp=sharing](https://drive.google.com/drive/folders/1tD3G47n7r7tRqSeGR0fdKSYLkn-EPQiH?usp=sharing) 
 ## Task - 1 (Saving employee sata in database)
 
 > index.html
@@ -519,11 +525,15 @@ public class delete extends HttpServlet {
 ```
 
 
-### Outputs
+## Outputs
+
+
 
 > index.html
 
 ![](/images/image-9.png)
+
+### Registering a user 
 
 > register.html
 
@@ -536,3 +546,61 @@ public class delete extends HttpServlet {
 > Redirect after 5sec to showusers
 
 ![](/images/image-12.png)
+
+> Response after a already exist email in the database
+
+![](/images/image-13.png)
+
+```sql
+MariaDB [java]> select * from register;
++-------------+
+| email       |
++-------------+
+| t@email.com |
++-------------+
+1 row in set (0.005 sec)
+```
+
+### Showing all the users in database
+
+![](/images/image-14.png)
+
+### Updating user in database
+
+![](/images/image-15.png)
+
+> After updating to a email that is not taken by any other user
+
+![](/images/image-16.png)
+
+```sql
+MariaDB [java]> select * from register;
++----------------+
+| email          |
++----------------+
+| test@email.com |
++----------------+
+1 row in set (0.000 sec)
+```
+
+> After updating to a email that is taken by another user
+
+![](/images/image-17.png)
+
+### Deleting user from DB
+
+![](/images/image-19.png)
+
+> response if the email exist in DB
+
+![](/images/image-20.png)
+
+> Response if the email is not in the DB
+
+![](/images/image-21.png)
+
+```sql
+MariaDB [java]> select * from register;
+Empty set (0.000 sec)
+```
+
