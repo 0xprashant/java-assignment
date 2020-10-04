@@ -1,5 +1,5 @@
 # Java assignment 2 
-**Submitted by - Rihan  Khan**
+**Submitted by -  Prashant Saini**
 
 
 > index.html
