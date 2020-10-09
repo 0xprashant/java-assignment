@@ -1,41 +1,38 @@
-# Assignment 5 - Cookie Manipulation
+# Assignment - 6 JavaFilters
 
-Submitted by - Prashant Saini
+## Question - WAP to implement the authentication of multiple web pages using Filter interface.
 
 > index.html
 
 ```html
-
 <!DOCTYPE html> 
 <html> 
 <head> 
-<title>Cookie Example</title> 
+<title>HttpSession</title> 
 <style>
-            body{
-           background: rgb(2,0,36);
-            background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,116,1) 35%, rgba(0,212,255,1) 100%); }
 </style>
 </head> 
 
 <body><center>
-    <form action="./signup" method="post"> 
-        <h1>Do Signup</h1>
-        <p>Enter FirstName:</p>  
-        <input type="text" name="firstname"/> 
-        <p>Enter LastName:</p>  
-        <input type="text" name="lastname"/><br></br>
-        <p>Enter Email:</p>  
-        <input type="text" name="email"/><br></br>
+    <form action="./login" method="post"> 
+        <h1>Do Signup and then Login</h1>
+        <h2>Signup here</h2>
+        <p>Enter Username:</p>  
+        <input type="text" name="username"/> 
+        <p>Enter Password:</p>  
+        <input type="text" name="password"/><br></br>
         <input type="submit"/>
         <br></br>
     </form>
+    <a href="profile">profile Page</a>
+    <a href="secret">Secret Page</a>
     
 </center></body> 
 
-</html> 
+</html>
 ```
 
-> signup.java
+> login.java (servlet)
 
 ```java
 import java.io.IOException;
@@ -48,102 +45,363 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 import java.util.*; 
 import java.lang.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-public class signup extends HttpServlet {
+public class login extends HttpServlet {
 
-   public void doPost(HttpServletRequest rq, HttpServletResponse rs) throws ServletException, IOException
+   public void doPost(HttpServletRequest rq, HttpServletResponse rs)
    {
        try
        {
            rs.setContentType("text/html");
            PrintWriter out=rs.getWriter();
-           String firstname=rq.getParameter("firstname");
-           String lastname=rq.getParameter("lastname");
-           String email=rq.getParameter("email");
-           Cookie ck[]=rq.getCookies();
+           String username=rq.getParameter("username");
+           String password=rq.getParameter("password");
+           out.print("I am login page<br></br>");
+           out.print(username);
            
-           if(ck==null)
-           {    
-               if(firstname.isEmpty() || lastname.isEmpty()|| email.isEmpty())
-               {
-                    out.print("<script>alert('Dont specify any null value , because you are new here')</script>");
-                    out.print("<meta http-equiv=\"refresh\" content=\"0.5;url=http://localhost:29734/CookieExample/index.html\">");
-               }
-               else
-               {
-                    Cookie c1 = new Cookie("firstname",firstname);
-                    Cookie c2 = new Cookie("lastname",lastname);
-                    Cookie c3 = new Cookie("email",email);
-                    rs.addCookie(c1);
-                    rs.addCookie(c2);
-                    rs.addCookie(c3);
-                    out.print("<h1>Added</h1>");
-                    rs.setIntHeader("Refresh", 1);
-               }
-           }
-           else
-           {
-               if(firstname.isEmpty() == false)
-               {
-                   Cookie c1 = new Cookie("firstname",firstname);
-                   rs.addCookie(c1);
-               }
-               if(lastname.isEmpty() == false)
-               {
-                   Cookie c2 = new Cookie("lastname",lastname);
-                   rs.addCookie(c2);
-               }
-               if(email.isEmpty() == false)
-               {
-                   Cookie c3 = new Cookie("email",email);
-                   rs.addCookie(c3);
-               }
-               out.print("<html><head><style>table, th, td {border: 1px solid black;}</style></head><body><table style=\"width:300px;\"><tr><th colspan=\"1\">All Emails</th><th>value</th></tr>");
-               for(int i=0;i<ck.length;i++)
-               {           
-                   out.print("<tr><td>"+ck[i].getName()+"</td>");
-                   out.print("<td>"+ck[i].getValue()+"</td></tr>");
-               }
-               out.print("</table></body></html>");
-           }
+           
        }
        catch(Exception e)
        {
 
-       }  
-    }
-   
+       }
        
+    }
 }
 ```
 
-## Outputs
+> login_check (filter)
 
-> signup page
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
 
-![](/images/image-25.png)
+import javax.servlet.*;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;  
+import java.io.PrintWriter;  
+import javax.servlet.ServletException;  
+import javax.servlet.http.HttpServlet;  
+import javax.servlet.http.HttpServletRequest;  
+import javax.servlet.http.HttpServletResponse;  
+import javax.servlet.http.HttpSession;
+
+public class login_check implements Filter{
+
+	public void init(FilterConfig arg0) throws ServletException {}
+	
+	public void doFilter(ServletRequest rq, ServletResponse rs,
+			FilterChain chain) throws IOException, ServletException {
+	rs.setContentType("text/html");  
+        PrintWriter out=rs.getWriter();  
+        try{
+            String username=rq.getParameter("username");
+           String password=rq.getParameter("password");
+            
+        HttpServletRequest request=(HttpServletRequest)rq;
+        HttpSession session=request.getSession(false); 
+        
+        if(password.isEmpty() || username.isEmpty())
+           {
+                
+                out.print("Don't specify any null value");
+   
+           }
+           else 
+           {
+                session=request.getSession(true);
+                
+                
+           }
+        
+        if (session==null)
+                {
+        out.print("<br>You have to login first soryy</br>");
+        
+        }
+        else
+        {
+            
+            chain.doFilter(rq, rs);
+        }}
+        catch(Exception e)
+        {
+            //out.print(e.getMessage());
+        }
+        }
+	public void destroy() {}
+}
+```
+
+> profile.java (servlet)
+
+```java
+import java.io.IOException;  
+import java.io.PrintWriter;  
+import javax.servlet.ServletException;  
+import javax.servlet.http.HttpServlet;  
+import javax.servlet.http.HttpServletRequest;  
+import javax.servlet.http.HttpServletResponse;  
+import javax.servlet.http.HttpSession;  
+public class profile extends HttpServlet {  
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)  
+                      throws ServletException, IOException {  
+        response.setContentType("text/html");  
+        PrintWriter out=response.getWriter();  
+          
+          
+        out.print("I am profile page");
+        
+          
+    }  
+}
+
+```
+
+> profileFilter.java (Filter)
 
 
-> First time user with input of null values
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
 
-![](/images/image-26.png)
+import javax.servlet.*;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;  
+import java.io.PrintWriter;  
+import javax.servlet.ServletException;  
+import javax.servlet.http.HttpServlet;  
+import javax.servlet.http.HttpServletRequest;  
+import javax.servlet.http.HttpServletResponse;  
+import javax.servlet.http.HttpSession;
 
-> Showing details after signup
+public class profileFilter implements Filter{
 
-![](/images/image-27.png)
+	public void init(FilterConfig arg0) throws ServletException {}
+	
+	public void doFilter(ServletRequest rq, ServletResponse rs,
+			FilterChain chain) throws IOException, ServletException {
+	rs.setContentType("text/html");  
+        PrintWriter out=rs.getWriter();  
+        try{
+         
+        HttpServletRequest request=(HttpServletRequest)rq;
+        HttpSession session=request.getSession(false); 
+        if (session==null)
+                {
+        out.print("<br>You have to login first</br>");
+        
+        }
+        else
+        {
+            
+            chain.doFilter(rq, rs);
+        }
+        }
+        catch(Exception e)
+        {
+            
+        }
+        }
+	public void destroy() {}
+}
+```
 
-> if the user is an old user and specify any new input and update the cookies
+> secret.java (servlet)
 
-![](/images/image-28.png)
+```java
+import java.io.IOException;  
+import java.io.PrintWriter;  
+import javax.servlet.ServletException;  
+import javax.servlet.http.HttpServlet;  
+import javax.servlet.http.HttpServletRequest;  
+import javax.servlet.http.HttpServletResponse;  
+import javax.servlet.http.HttpSession;  
+public class secret extends HttpServlet {  
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)  
+                      throws ServletException, IOException {  
+        response.setContentType("text/html");  
+        PrintWriter out=response.getWriter();  
+          
+          
+        out.print("I am secret page , the secret is that Mirzapur 2 is coming");     
+          
+    }  
+}
+```
 
-> if the user specify any input value null or empty 
+> web.xml
 
-![](/images/image-29.png)
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <filter>
+        <filter-name>login_check</filter-name>
+        <filter-class>login_check</filter-class>
+    </filter>
+    <filter>
+        <filter-name>profileFilter</filter-name>
+        <filter-class>profileFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>login_check</filter-name>
+        <url-pattern>/login</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>profileFilter</filter-name>
+        <url-pattern>/profile</url-pattern>
+        <url-pattern>/secret</url-pattern>
+    </filter-mapping>
+    <servlet>
+        <servlet-name>login</servlet-name>
+        <servlet-class>login</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>profile</servlet-name>
+        <servlet-class>profile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>secret</servlet-name>
+        <servlet-class>secret</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>login</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>profile</servlet-name>
+        <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>secret</servlet-name>
+        <url-pattern>/secret</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>
+```
 
-![](/images/image-30.png)
+## output 
 
+![](/images/image-31.png) 
 
+> without logging in to access profile and secret
 
+![](/images/32.png)
 
+> login without any username and password
+
+![](/images/33.png) 
+
+> After logging in 
+
+![](/images/34.png) 
+
+![](/images/35.png) 
+
+![](/images/36.png) 
+
+## Question - 2 
+
+> WAP to implement the addition of two numbers but use Filter to perform validation NumberFormatException.
+
+> sum.java (servlet)
+
+```java
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class sum extends HttpServlet {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		int n1=Integer.parseInt(request.getParameter("email"));
+		int n2=Integer.parseInt(request.getParameter("password"));
+
+		int sum=n1+n2;
+		PrintWriter pw=response.getWriter();
+		pw.print("Sum is  " + sum);
+	}
+
+}
+```
+
+> index.html
+
+```html
+<!DOCTYPE html> 
+<html> 
+<head> 
+<title>Cookie Example</title> 
+<style>
+            body{
+           background: rgb(2,0,36);
+            background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,116,1) 35%, rgba(0,212,255,1) 100%); }
+</style>
+</head> 
+
+<body><center>
+    <form action="./sum" method="post"> 
+        <h1>Do Signup</h1>
+        <p>Enter 1st</p>  
+        <input type="text" name="email"/> 
+        <p>Enter 2nd:</p>  
+        <input type="text" name="password"/><br></br>
+        
+        <input type="submit"/>
+        <br></br>
+    </form>
+    
+</center></body> 
+
+</html> 
+```
+
+> filter.java (filter)
+
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.*;
+
+public class filter implements Filter{
+
+	public void init(FilterConfig arg0) throws ServletException {}
+	
+	public void doFilter(ServletRequest req, ServletResponse resp,
+			FilterChain chain) throws IOException, ServletException {
+	PrintWriter out=resp.getWriter();	
+            try {
+		
+		int num1=Integer.parseInt(req.getParameter("email"));
+		int num2=Integer.parseInt(req.getParameter("password"));
+                chain.doFilter(req, resp);
+                
+                }
+                catch(NumberFormatException e)
+		{
+
+			out.print("How can you add chars ?");
+                }
+
+	}
+	public void destroy() {}
+}
+```
+
+## output
+
+![](/images/37.png) 
+
+![](/images/38.png) 
