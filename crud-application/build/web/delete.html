@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Insert Data</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="./style.css">
+  <style>
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div id="particles-js"></div> 
+<script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script  src="./script.js"></script>
+<div class="container">
+    <center><h2 style="color:white">Delete data </h2></center>
+  <form action="./delete">
+      <div class="form-group">
+      <h4 style="color:white">ID : </h4>
+      <input type="text" class="form-control" id="id" placeholder="Enter ID" name="id">
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+
+<center><a href="./index.html" class="button">Go back to home</a><br></br>
+</body>
+</html>
